@@ -1,5 +1,4 @@
-import { useState ,memo, useCallback, useMemo} from "react";
-
+import { useState, memo, useCallback, useMemo, useEffect } from "react";
 import IconButton from "../UI/IconButton";
 import MinusIcon from "../UI/Icons/MinusIcon";
 import PlusIcon from "../UI/Icons/PlusIcons.jsx";
@@ -24,24 +23,42 @@ function isPrime(number) {
   return true;
 }
 
-const Counter= memo(function Counter({ initialCount }){
+const Counter = memo(function Counter({ initialCount }) {
   log("<Counter /> rendered", 1);
-  const initialCountIsPrime = useMemo(()=>isPrime(initialCount),[initialCount]);
+  const initialCountIsPrime = useMemo(
+    () => isPrime(initialCount),
+    [initialCount]
+  );
 
-  const [counter, setCounter] = useState([initialCount]);
-const currentCounter=counter.reduce((prevCount,currentCount)=>prevCount+currentCount)
+  // useEffect(() => {
+  //   setCounter([{ value: initialCount, id: Math.random() * 1000 }]);
+  // }, [initialCount]);
 
-  const handleDecrement= useCallback(function handleDecrement() {
-    setCounter((prevCounter) => [-1,...prevCounter]);
-  },[])
+  const [counter, setCounter] = useState([
+    { value: initialCount, id: Math.random() * 1000 },
+  ]);
+  const currentCounter = counter.reduce(
+    (prevCount, currentCount) => prevCount + currentCount.value,
+    0
+  );
 
- const handleIncrement= useCallback (function handleIncrement() {
-    setCounter((prevCounter) =>[1,...prevCounter]);
-  },[])
+  const handleDecrement = useCallback(function handleDecrement() {
+    setCounter((prevCounter) => [
+      { value: -1, id: Math.random() * 1000 },
+      ...prevCounter,
+    ]);
+  }, []);
+
+  const handleIncrement = useCallback(function handleIncrement() {
+    setCounter((prevCounter) => [
+      { value: 1, id: Math.random() * 1000 },
+      ...prevCounter,
+    ]);
+  }, []);
 
   return (
     <section className="counter">
-      <p className="counter-info"> 
+      <p className="counter-info">
         The initial counter value was <strong>{initialCount}</strong>. It{" "}
         <strong>is {initialCountIsPrime ? "a" : "not a"}</strong> prime number.
       </p>
@@ -54,10 +71,9 @@ const currentCounter=counter.reduce((prevCount,currentCount)=>prevCount+currentC
           Increment
         </IconButton>
       </p>
-      <CounterHistory history={counter}/>
+      <CounterHistory history={counter} />
     </section>
   );
-}
+});
 
-)
-export default Counter; 
+export default Counter;
