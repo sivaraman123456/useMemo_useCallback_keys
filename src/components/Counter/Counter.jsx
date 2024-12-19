@@ -1,4 +1,4 @@
-import { useState ,memo} from "react";
+import { useState ,memo, useCallback} from "react";
 
 import IconButton from "../UI/IconButton";
 import MinusIcon from "../UI/Icons/MinusIcon";
@@ -29,17 +29,17 @@ const Counter= memo(function Counter({ initialCount }){
 
   const [counter, setCounter] = useState(initialCount);
 
-  function handleDecrement() {
+  const handleDecrement= useCallback(function handleDecrement() {
     setCounter((prevCounter) => prevCounter - 1);
-  }
+  },[])
 
-  function handleIncrement() {
+ const handleIncrement= useCallback (function handleIncrement() {
     setCounter((prevCounter) => prevCounter + 1);
-  }
+  },[])
 
   return (
     <section className="counter">
-      <p className="counter-info">
+      <p className="counter-info"> 
         The initial counter value was <strong>{initialCount}</strong>. It{" "}
         <strong>is {initialCountIsPrime ? "a" : "not a"}</strong> prime number.
       </p>
